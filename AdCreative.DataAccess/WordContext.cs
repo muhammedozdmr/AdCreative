@@ -16,7 +16,7 @@ namespace AdCreative.DataAccess
             _configuration = configuration;
         }
 
-        // Design-time işlemler için sadece DbContextOptions kullanan constructor
+        // Design-time işlemler için kullanılan constructor
         public WordContext(DbContextOptions<WordContext> options)
             : base(options)
         {
