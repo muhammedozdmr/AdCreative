@@ -1,8 +1,199 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Kelime Girişi";
 }
+@model IPagedList<WordListDto>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f9;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 120px;
+            width: 70%;
+            max-width: 900px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-create, .btn-generate, .btn-reset, .btn-list {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            width: 24%;
+            margin: 5px 0;
+        }
+
+        .btn-create {
+            background-color: #4CAF50; /* Yeşil */
+            color: white;
+        }
+
+        .btn-generate {
+            background-color: #2196F3; /* Mavi */
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: red; /* Kırmızı */
+            color: white;
+        }
+
+        .btn-list {
+            background-color: darkorange;
+            color: white;
+        }
+
+        .btn-create:hover, .btn-generate:hover, .btn-reset:hover, .btn-list:hover {
+            opacity: 0.8;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="#">Anasayfa</a>
+        <a href="#">Kelime Listesi</a>
+        <a href="#">Hakkında</a>
+    </div>
+
+    <div class="form-container">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            @if (TempData.ContainsKey("SuccessMessage"))
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData.ContainsKey("ErrorMessage"))
+            {
+                @MessageHelper.DisplayError((string)TempData["ErrorMessage"]);
+            }
+
+            <div class="form-group">
+                <form method="post" asp-controller="Home" asp-action="Create">
+                    <label for="kelime">Kelime:</label><br>
+                    <input type="text" id="Word" name="Word" placeholder="Buraya kelime girin"><br>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-create">Gönder</button>
+                        <button type="reset" class="btn btn-reset">Temizle</button>
+                        <button type="submit" formaction="@Url.Action("Index", "Home")" class="btn btn-list">Listele</button>
+                        <button type="submit" formaction="@Url.Action("RandomGenerator", "Home")" class="btn btn-generate">Otomatik Oluştur</button>
+                    </div>
+                </form>
+            </div>
+
+        <div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Kelime</th>
+                        <th>Karakter Sayısı</th>
+                        <th>Unique ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Word</td>
+                            <td>@item.CountWord</td>
+                            <td>@item.UniqueId</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Sayfalama işlemi için PagedList pager'ı çalıştırmak *@
+        @Html.PagedListPager(Model, pageNumber => Url.Action("Index", new { pageNumber }), new X.PagedList.Mvc.Core.PagedListRenderOptions
+        {
+            LiElementClasses = new List<string> { "page-link" }
+        })
+    </div>
+</body>
+</html>

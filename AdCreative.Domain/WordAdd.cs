@@ -4,5 +4,6 @@
     {
         public string? Word { get; set; }
         public int? CountWord { get; set; }
+        public string? UniqueId { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using X.PagedList;
+using CommandResult = AdCreative.Business.CommandResult;
 
 namespace AdCreative.WebApp.Controllers
 {
@@ -21,15 +22,24 @@ namespace AdCreative.WebApp.Controllers
 
         public async Task<IActionResult> Index(int pageNumber = 1)
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44300/");
-            HttpResponseMessage response = await client.GetAsync("api/WordDbAPI/Index/");
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            };
+
+            var client = new HttpClient(handler)
+            {
+                BaseAddress = new Uri("https://localhost:7076/")
+            };
+
+            var response = await client.GetAsync("api/WordDbAPI/Index");
+
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStringAsync();
-                List<WordDto> words = JsonConvert.DeserializeObject<List<WordDto>>(result);
+                List<WordListDto> words = JsonConvert.DeserializeObject<List<WordListDto>>(result);
                 var listWord = words.ToPagedList(pageNumber, 10);
-                return View(words);
+                return View(listWord);
             }
             else
             {
@@ -46,16 +56,19 @@ namespace AdCreative.WebApp.Controllers
                 ViewBag.Words = _wordService.GetAll();
             }
             var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44300/");
+            client.BaseAddress = new Uri("https://localhost:7076/");
             HttpResponseMessage response = await client.PostAsJsonAsync("api/WordDbAPI/Create/", dto);
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "Kelime kaydedildi.";
+                var successMessage = "Kelime kaydedildi.";
+                TempData["SuccessMessage"] = successMessage;
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["ErrorMessage"] = "Kelime kaydedilemedi !";
+                var errorResponse= await response.Content.ReadAsStringAsync();
+                var errorMessage = JsonConvert.DeserializeObject<AdCreative.Dto.CommandResult>(errorResponse).Message;
+                TempData["ErrorMessage"] = $"Kelime kaydedilemedi : {errorMessage}";
                 return RedirectToAction("Index");
             }
         }
@@ -64,7 +77,7 @@ namespace AdCreative.WebApp.Controllers
         public async Task<IActionResult> RandomGenerator()
         {
             var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44300/");
+            client.BaseAddress = new Uri("https://localhost:7076/");
             HttpResponseMessage response = await client.PostAsync("api/WordDbAPI/Generate/", null);
             if (response.IsSuccessStatusCode)
             {

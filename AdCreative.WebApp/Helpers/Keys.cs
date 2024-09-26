@@ -1,4 +1,4 @@
-﻿namespace McTours.WebApp.Helpers
+﻿namespace AdCreative.WebApp.Helpers
 {
     public static class Keys
     {

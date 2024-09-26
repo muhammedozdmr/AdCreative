@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace AdCreative.Dto
 {
-    public class WordDto
+    public class WordListDto
     {
+        public int Id { get; set; }
         public string? Word { get; set; }
+        public int? CountWord { get; set; }
+        public string? UniqueId { get; set; }
     }
 }

@@ -33,6 +33,9 @@ namespace AdCreative.DataAccess.Migrations
                     b.Property<int?>("CountWord")
                         .HasColumnType("int");
 
+                    b.Property<string>("UniqueId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Word")
                         .HasMaxLength(50)
                         .IsUnicode(true)
@@ -47,18 +50,21 @@ namespace AdCreative.DataAccess.Migrations
                         {
                             Id = 1,
                             CountWord = 7,
+                            UniqueId = "47b63467-7d4d-48e7-b81b-8fcd4d8b183e",
                             Word = "AbCdEfG"
                         },
                         new
                         {
                             Id = 2,
                             CountWord = 12,
+                            UniqueId = "6be64795-9d99-4765-ac7a-6ed15aba97c0",
                             Word = "Test2AbCdEfG"
                         },
                         new
                         {
                             Id = 3,
                             CountWord = 13,
+                            UniqueId = "c2f8bbce-2eee-4f3a-887b-97b2ea11dd7c",
                             Word = "TeStUcAbCdEfG"
                         });
                 });

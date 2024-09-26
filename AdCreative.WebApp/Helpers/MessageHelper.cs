@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Html;
 using System.Text;
 
-namespace McTours.WebApp.Helpers
+namespace AdCreative.WebApp.Helpers
 {
     public static class MessageHelper
     {
-        //Html elementlerini bu şekilde render ediyor string nesnelerini
         public static HtmlString DisplayError(string message)
         {
-            //Environment.NewLine Windows: \n\r Linux: \r MacOS: \n bu yüzden farklı işletim sistemlerinde sıkıntı çıkmasın diye
-            //onu yazdık. Daktilodan geliyor. sayfa sonunda çark ile bir satır aşağı in \n ve satır başı yap Carriage Return \r demek
             var splittedMessages = message.Split(Environment.NewLine);
             var stringBuilder = new StringBuilder();
             stringBuilder

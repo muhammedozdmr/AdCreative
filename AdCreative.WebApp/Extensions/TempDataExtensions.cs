@@ -1,7 +1,7 @@
-﻿using McTours.WebApp.Helpers;
+﻿using AdCreative.WebApp.Helpers;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace McTours.WebApp.Extensions
+namespace AdCreative.WebApp.Extensions
 {
     public static class TempDataExtensions
     {

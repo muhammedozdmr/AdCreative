@@ -29,12 +29,19 @@ namespace AdCreative.Business
                 }
                 else
                 {
-                    if (!IsWordInDatabase(wordDto.Word))
+                    if (IsWordInDatabase(wordDto.Word))
                     {
                         return CommandResult.Failure("Kelime zaten mevcut !");
                     }
                     // AutoMapper ile DTO'dan entity'ye dönüşüm
-                    WordAdd entity = _mapper.Map<WordAdd>(wordDto);
+                    //WordAdd entity = _mapper.Map<WordAdd>(wordDto);
+                    WordAdd entity = new WordAdd()
+                    {
+                        Word = wordDto.Word,
+                        CountWord = wordDto.Word.Length,
+                        UniqueId = Guid.NewGuid().ToString()
+
+                    };
                     var validationResult = _wordValidator.Validate(entity);
                     if (validationResult.HasErrors)
                     {
@@ -53,7 +60,7 @@ namespace AdCreative.Business
             }
         }
 
-        public IEnumerable<WordDto> GetAll()
+        public IEnumerable<WordListDto> GetAll()
         {
             try
             {
@@ -62,9 +69,10 @@ namespace AdCreative.Business
             catch (Exception ex)
             {
                 Trace.TraceError(ex.ToString());
-                return new List<WordDto>();
+                return new List<WordListDto>();
             }
         }
+
         public void GenerateWord()
         {
             for (int i = 0; i < 10; i++)
@@ -74,8 +82,7 @@ namespace AdCreative.Business
                 {
                     var wordDto = new WordDto()
                     {
-                        Word = word,
-                        CountWord = word.Length
+                        Word = word
                     };
                     var wordModel = MapToEntity(wordDto);
                     _context.Words.Add(wordModel);
@@ -142,15 +149,18 @@ namespace AdCreative.Business
             return new WordAdd
             {
                 Word = wordDto.Word,
-                CountWord = wordDto.CountWord
+                CountWord = wordDto.Word.Length,
+                UniqueId = Guid.NewGuid().ToString()
             };
         }
-        private static WordDto MapToDto(WordAdd word)
+        private static WordListDto MapToDto(WordAdd word)
         {
-            return new WordDto
+            return new WordListDto
             {
+                Id = word.Id,
                 Word = word.Word,
-                CountWord = word.CountWord
+                CountWord = word.CountWord,
+                UniqueId = word.UniqueId
             };
         }
     }

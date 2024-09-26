@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace AdCreative.Dto
 {
-    public class WordDto
+    public class WordViewModelDto
     {
-        public string? Word { get; set; }
+        public WordDto? Word { get; set; }
+        public List<WordListDto>? Words { get; set; }
     }
 }

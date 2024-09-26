@@ -19,7 +19,8 @@ namespace AdCreative.DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Word = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CountWord = table.Column<int>(type: "int", nullable: true)
+                    CountWord = table.Column<int>(type: "int", nullable: true),
+                    UniqueId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,12 +29,12 @@ namespace AdCreative.DataAccess.Migrations
 
             migrationBuilder.InsertData(
                 table: "WordAdd",
-                columns: new[] { "Id", "CountWord", "Word" },
+                columns: new[] { "Id", "CountWord", "UniqueId", "Word" },
                 values: new object[,]
                 {
-                    { 1, 7, "AbCdEfG" },
-                    { 2, 12, "Test2AbCdEfG" },
-                    { 3, 13, "TeStUcAbCdEfG" }
+                    { 1, 7, "47b63467-7d4d-48e7-b81b-8fcd4d8b183e", "AbCdEfG" },
+                    { 2, 12, "6be64795-9d99-4765-ac7a-6ed15aba97c0", "Test2AbCdEfG" },
+                    { 3, 13, "c2f8bbce-2eee-4f3a-887b-97b2ea11dd7c", "TeStUcAbCdEfG" }
                 });
         }
 

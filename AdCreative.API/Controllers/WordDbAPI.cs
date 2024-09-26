@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace InputCheckOnDBWithApi.Controllers
 {
-    [Route("api/(controller)")]
+    [Route("api/WordDbAPI")]
     [ApiController]
     public class WordDbAPI : Controller
     {
